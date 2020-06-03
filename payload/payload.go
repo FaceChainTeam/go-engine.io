@@ -18,20 +18,19 @@ type readArg struct {
 
 // Payload does encode or decode to payload protocol.
 type Payload struct {
-	close     chan struct{}
-	closeOnce sync.Once
-	err       atomic.Value
+	feeding, flushing int64
+	close             chan struct{}
+	closeOnce         sync.Once
+	err               atomic.Value
 
 	pauser *pauser
 
 	readerChan   chan readArg
-	feeding      int64
 	readError    chan error
 	readDeadline atomic.Value
 	decoder      decoder
 
 	writerChan    chan io.Writer
-	flushing      int64
 	writeError    chan error
 	writeDeadline atomic.Value
 	encoder       encoder
